@@ -19,3 +19,17 @@ using var client = new WTelegram.Client(Config);
 //Запуск интерактивной настройки
 var myself = await client.LoginUserIfNeeded();
 Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
+
+
+
+// пример использования
+var chats = await client.Messages_GetAllChats();
+Console.WriteLine("This user has joined the following:");
+foreach (var (id, chat) in chats.chats)
+    if (chat.IsActive)
+        Console.WriteLine($"{id,10}: {chat}");
+Console.Write("Type a chat ID to send a message: ");
+long chatId = long.Parse(Console.ReadLine());
+var target = chats.chats[chatId];
+Console.WriteLine($"Sending a message in chat {chatId}: {target.Title}");
+await client.SendMessageAsync(target, "Hello, World");
