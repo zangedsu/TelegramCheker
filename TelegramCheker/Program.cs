@@ -1,4 +1,4 @@
-﻿
+﻿// ручная конфигурация
 static string Config(string what)
 {
     switch (what)
