@@ -12,7 +12,7 @@ static string Config(string what)
         case "verification_code": Console.Write("Код подтверждения(отправлен в СМС или Push): "); return Console.ReadLine();
         case "first_name": return "John";      // Если номер ещё не зарегистрирован
         case "last_name": return "Doe";        // Если номер ещё не зарегистрирован
-        case "password": return "1944Qwerty!";     // Пароль для 2fa
+        case "password": return "!";     // Пароль для 2fa
         default: return null;                  // Конфиг по умолчанию
     }
 }
