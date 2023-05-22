@@ -30,7 +30,7 @@ Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
 // подписываемся на событие
 client.OnUpdate += Client_OnUpdate;
 
-Params config = new Params();
+Data config = new Data();
 
 // пример использования 
 

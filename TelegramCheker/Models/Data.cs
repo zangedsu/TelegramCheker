@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace TelegramCheker.Models;
-    internal class Params
+    internal class Data
     {
     private string _paramsFileName = @"Data/Config.json";
     public Config ProgramConfig { get; set; }
 
-    public Params()
+    public Data()
     {
         DeserializeData(_paramsFileName);
         if (ProgramConfig == null)
