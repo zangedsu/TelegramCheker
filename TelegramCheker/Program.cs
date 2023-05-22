@@ -1,4 +1,5 @@
 ﻿// ручная конфигурация
+using TelegramCheker.Models;
 using TL;
 using WTelegram;
 
@@ -26,7 +27,10 @@ Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
  Dictionary<long, User> Users = new();
  Dictionary<long, ChatBase> Chats = new();
 
+// подписываемся на событие
 client.OnUpdate += Client_OnUpdate;
+
+Params config = new Params();
 
 // пример использования 
 
