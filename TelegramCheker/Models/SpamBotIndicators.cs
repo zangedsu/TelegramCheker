@@ -17,6 +17,6 @@ namespace TelegramCheker.Models;
         ReplyDelayInSeconds = replyDelayInSeconds;
     }
 
-    public SpamBotIndicators() : this (new(), 1){ }
+    public SpamBotIndicators() : this(new() {"Тут нужно написать признаки ботности", "Признак 1","Признак 2", "И Т. Д."}, 1){ }
 }
 
