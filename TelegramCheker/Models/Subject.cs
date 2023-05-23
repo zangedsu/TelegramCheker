@@ -20,12 +20,11 @@ namespace TelegramCheker.Models;
     /// <param name="userId"></param>
     /// <param name="isTestPassed"></param>
     /// <param name="isOnCheckNow"></param>
-    /// <param name="firstMessageSentAt"></param>
-    public Subject(long userId, bool isTestPassed, bool isOnCheckNow)
+    public Subject(long userId)
     {
         UserId = userId;
-        IsTestsPassed = isTestPassed;
-        IsOnCheckNow = isOnCheckNow;
+        IsTestsPassed = false;
+        IsOnCheckNow = true;
         FirstMessageSentAt = new DateTime();
         FirstMessageSentAt = DateTime.UtcNow;
     }
