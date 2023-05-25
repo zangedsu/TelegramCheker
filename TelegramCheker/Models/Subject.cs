@@ -9,7 +9,7 @@ namespace TelegramCheker.Models;
     internal class Subject
     {
     // TODO: Реализовать модель, описывающую проверяемого пользователя
-    public long UserId { get; set; }
+    public string UserName { get; set; }
     public bool IsTestsPassed { get; set; }
     public bool IsOnCheckNow { get; set; }
     public DateTime FirstMessageSentAt { get; set; }
@@ -20,9 +20,9 @@ namespace TelegramCheker.Models;
     /// <param name="userId"></param>
     /// <param name="isTestPassed"></param>
     /// <param name="isOnCheckNow"></param>
-    public Subject(long userId)
+    public Subject(string userName)
     {
-        UserId = userId;
+        UserName = userName;
         IsTestsPassed = false;
         IsOnCheckNow = true;
         FirstMessageSentAt = new DateTime();
