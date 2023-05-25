@@ -80,7 +80,7 @@ Console.ReadKey();
     foreach (var update in updates.UpdateList)
         switch (update)
         {
-            case UpdateNewMessage unm: await DisplayMessage(unm.message); controller.newMessageRecieved(unm.message.ToString(), unm.message.From.ID) ; break;
+            case UpdateNewMessage unm: await DisplayMessage(unm.message); controller.newMessageRecieved(unm); break;
             case UpdateEditMessage uem: await DisplayMessage(uem.message, true); break;
             // Note: UpdateNewChannelMessage and UpdateEditChannelMessage are also handled by above cases
             case UpdateDeleteChannelMessages udcm: Console.WriteLine($"{udcm.messages.Length} message(s) deleted in {Chat(udcm.channel_id)}"); break;
