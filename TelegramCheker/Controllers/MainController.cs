@@ -21,6 +21,13 @@ namespace TelegramCheker.Controllers;
         //если это чат или канал
         if (chats.ContainsKey(update.message.Peer.ID))
         {
+            if(update.message.Peer.ID == 1880944338)
+            {
+                string username = getUsernameFromMessage( update.message.ToString());
+                   
+
+                Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
+            }
             Console.WriteLine($"ЭТО ЧАТ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
         }
         else if(users.ContainsKey(update.message.Peer.ID))
@@ -29,5 +36,44 @@ namespace TelegramCheker.Controllers;
         }
         //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
     }
+
+    private string getUsernameFromMessage (string m)
+    {
+        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&' };
+        string result = "";
+        //разбиваем сообщение на подстроки
+        string[] strings = m.Split('\n');
+
+        Console.WriteLine("***************************");
+       // foreach (string s in strings) { Console.WriteLine(s + "\n"); }
+       // Console.WriteLine("***************************");
+
+        if (strings[0].Contains('@'))
+        {
+            //ищем индексы в первой подстроке
+            var first = strings[0].IndexOf("(") + 1;
+            var second = strings[0].IndexOf(")");
+
+            result = m.Substring(first, second - first);
+        }
+        else
+        {
+            for(int i = 2; i < strings.Length; i++)
+            {
+                var tmp = strings[i].Split(specChars);
+                foreach(var c in tmp)
+                {
+                    if (c.Contains('@'))
+                    {
+                        result = c;
+                    }
+                }
+            }
+        }
+
+
+        return result;
+    }
+    
 }
 
