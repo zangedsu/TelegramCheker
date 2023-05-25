@@ -23,7 +23,11 @@ namespace TelegramCheker.Controllers;
         {
             Console.WriteLine($"ЭТО ЧАТ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
         }
-      //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
+        else if(users.ContainsKey(update.message.Peer.ID))
+        {
+            Console.WriteLine($"ЭТО ЛИЧНОЕ СООБЩЕНИЕ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
+        }
+        //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
     }
 }
 
