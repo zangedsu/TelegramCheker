@@ -40,7 +40,7 @@ Data config = new Data();
 // получаем список личных диалогов
 var dialogs = await client.Messages_GetAllDialogs();
 // получаем список чатов и каналов
-var chats = await client.Messages_GetAllChats();
+//var chats = await client.Messages_GetAllChats();
 
 dialogs.CollectUsersChats(Users, Chats);
 
@@ -51,11 +51,11 @@ foreach (var (id, chat) in dialogs.users)
         Console.WriteLine($"{id,10}: {chat}");
 
 // выводим список чатов и каналов
-Console.WriteLine("Список каналов и чатов:");
-foreach (var (id, chat) in chats.chats)
-    if (chat.IsActive)
-        Console.WriteLine($"{id,10}: {chat}");
-
+//Console.WriteLine("Список каналов и чатов:");
+//foreach (var (id, chat) in chats.chats)
+ //   if (chat.IsActive)
+  //      Console.WriteLine($"{id,10}: {chat}");
+//
 Console.ReadKey();
 // отправка сообщения в чат или канал
 //Console.Write("Type a chat ID to send a message: ");
@@ -80,7 +80,7 @@ Console.ReadKey();
     foreach (var update in updates.UpdateList)
         switch (update)
         {
-            case UpdateNewMessage unm: await DisplayMessage(unm.message); controller.newMessageRecieved(unm); break;
+            case UpdateNewMessage unm: await DisplayMessage(unm.message); controller.newMessageRecieved(unm, Users, Chats); break;
             case UpdateEditMessage uem: await DisplayMessage(uem.message, true); break;
             // Note: UpdateNewChannelMessage and UpdateEditChannelMessage are also handled by above cases
             case UpdateDeleteChannelMessages udcm: Console.WriteLine($"{udcm.messages.Length} message(s) deleted in {Chat(udcm.channel_id)}"); break;

@@ -9,11 +9,21 @@ namespace TelegramCheker.Controllers;
     internal class MainController
     {
 
-    //новое сообщение в группе или канале
-    public void newMessageRecieved(UpdateNewMessage update)
+
+    public MainController()
     {
-        update.message.From
-        Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
+        
+    }
+
+    //новое сообщение в группе или канале
+    public void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
+    {
+        //если это чат или канал
+        if (chats.ContainsKey(update.message.Peer.ID))
+        {
+            Console.WriteLine($"ЭТО ЧАТ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
+        }
+      //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
     }
 }
 
