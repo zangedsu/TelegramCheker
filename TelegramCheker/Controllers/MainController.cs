@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelegramCheker.Models;
 using TL;
 
 namespace TelegramCheker.Controllers;
     internal class MainController
     {
 
+    private WTelegram.Client client;
+    private Data data;
+    private CheckController checkController;
 
-    public MainController()
+    public MainController(WTelegram.Client Client, Data Data)
     {
-        
+        client = Client;
+        data = Data;
+        checkController = new(data);
     }
 
     //новое сообщение в группе или канале
@@ -21,14 +27,14 @@ namespace TelegramCheker.Controllers;
         //если это чат или канал
         if (chats.ContainsKey(update.message.Peer.ID))
         {
-            if(update.message.Peer.ID == 1880944338)
+            //если это канал - цель
+            if(update.message.Peer.ID == data.ProgramConfig.TargetChatId)
             {
                 string username = getUsernameFromMessage( update.message.ToString());
-                   
 
+                checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
                 Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
             }
-            Console.WriteLine($"ЭТО ЧАТ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
         }
         else if(users.ContainsKey(update.message.Peer.ID))
         {
@@ -39,7 +45,7 @@ namespace TelegramCheker.Controllers;
 
     private string getUsernameFromMessage (string m)
     {
-        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&' };
+        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ' };
         string result = "";
         //разбиваем сообщение на подстроки
         string[] strings = m.Split('\n');

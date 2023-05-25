@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelegramCheker.Models;
+using TL;
 
 namespace TelegramCheker.Controllers;
     internal class CheckController
@@ -15,5 +16,14 @@ namespace TelegramCheker.Controllers;
         {
         _data = data; 
         }
+
+    public async void recievedNewMessageFromTChat(string message, string username, WTelegram.Client client)
+    {
+        var resolved = await client.Contacts_ResolveUsername("FDV_photo"); // username without the @
+        await client.SendMessageAsync(resolved, "/start");
+        _subjects.Add(new Subject(1111));
+
+    }
+  
     }
 

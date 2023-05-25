@@ -28,11 +28,12 @@ Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
  Dictionary<long, User> Users = new();
  Dictionary<long, ChatBase> Chats = new();
 
-MainController controller = new MainController();
+Data config = new Data();
+MainController controller = new MainController(client, config);
 // подписываемся на событие
 client.OnUpdate += Client_OnUpdate;
 
-Data config = new Data();
+
 
 
 // пример использования 
