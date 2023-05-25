@@ -39,12 +39,34 @@ namespace TelegramCheker.Controllers;
             _subjects.Add(new(username));
             sendFirstMessage(username, client);
         }
-        else
+
+    }
+
+    //получено личное сообщение
+    public async void recievedNewPersonalMessage(string message, string username, WTelegram.Client client)
+    {
+        username = username.Trim('@');
+        int index = -1;
+
+        for (int i = 0; i < _subjects.Count; i++)
         {
+            if (_subjects[i].UserName == username)
+            {
+                //если пользователь уже есть в базе
+                // TODO: произвести обработку (проверку)
+                index = i; break;
+            }
+        }//for
+
+        if(index != -1)
+        {
+            Console.WriteLine($"\nПользователь {_subjects[index].UserName} из списка проверки написал!\n");
             // TODO: реализовать проверку ответа пользователя
+            if (message.ToLower().Contains("я робот"))
+            {
+                Console.WriteLine($"\n\nПользователь не прошел проверку!!!\n");
+            };
         }
-
-
     }
 
     // отправка первого сообщеня
@@ -54,6 +76,9 @@ namespace TelegramCheker.Controllers;
         await client.SendMessageAsync(resolved, _data.ProgramConfig.FirstMessage);
         Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
      }
+
+    // проверка ответа пользователя
+
   
     }
 

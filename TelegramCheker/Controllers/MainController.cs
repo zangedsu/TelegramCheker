@@ -38,7 +38,7 @@ namespace TelegramCheker.Controllers;
         }
         else if(users.ContainsKey(update.message.Peer.ID))
         {
-            Console.WriteLine($"ЭТО ЛИЧНОЕ СООБЩЕНИЕ!!!!\n##########\n{update.message}\n########\n{update.message.Peer.ID}");
+           checkController.recievedNewPersonalMessage(update.message.ToString(), users[update.message.Peer.ID].username, client);
         }
         //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
     }

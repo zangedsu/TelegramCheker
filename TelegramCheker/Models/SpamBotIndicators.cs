@@ -18,5 +18,7 @@ namespace TelegramCheker.Models;
     }
 
     public SpamBotIndicators() : this(new() {"Тут нужно написать признаки ботности", "Признак 1","Признак 2", "И Т. Д."}, 1){ }
+
+
 }
 
