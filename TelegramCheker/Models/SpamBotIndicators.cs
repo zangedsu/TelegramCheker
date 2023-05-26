@@ -11,6 +11,11 @@ namespace TelegramCheker.Models;
     public List<string> Phrases { get; set; }
     public int ReplyDelayInSeconds { get; set; }
 
+    /// <summary>
+    /// Класс, описывающий индикаторы спама\ботности
+    /// </summary>
+    /// <param name="phrases">List<string> с фразами</param>
+    /// <param name="replyDelayInSeconds">int с минимальной задержкой в секундах</param>
     public SpamBotIndicators(List<string> phrases, int replyDelayInSeconds) 
     { 
         Phrases = phrases;

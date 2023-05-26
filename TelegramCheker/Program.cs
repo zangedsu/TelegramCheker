@@ -16,7 +16,7 @@ Data config = new Data();
         case "first_name": return "John";      // Если номер ещё не зарегистрирован
         case "last_name": return "Doe";        // Если номер ещё не зарегистрирован
         case "password": return "!";     // Пароль для 2fa
-        case "session_pathname": return @"./Data/TChecker.session";     // Папка для хранения сессии
+        case "session_pathname": return @"./Data/TChecker.session";     //Путь к файлу сессии
         default: return null;                  // Конфиг по умолчанию
     }
 }
@@ -27,6 +27,7 @@ using var client = new WTelegram.Client(Config);
 var myself = await client.LoginUserIfNeeded();
 Console.WriteLine($"Вошли в аккаунт {myself} (id {myself.id})");
 
+//словари для хранения диалогов
  Dictionary<long, User> Users = new();
  Dictionary<long, ChatBase> Chats = new();
 
@@ -99,6 +100,7 @@ Console.ReadKey();
         }
 }
 
+// показать сообщение в консоли
   Task DisplayMessage(MessageBase messageBase, bool edit = false)
 {
     if (edit) Console.Write("(Edit): ");
@@ -109,6 +111,7 @@ Console.ReadKey();
     }
     return Task.CompletedTask;
 }
+
 
  string User(long id) => Users.TryGetValue(id, out var user) ? user.ToString() : $"Пользователь {id}";
  string Chat(long id) => Chats.TryGetValue(id, out var chat) ? chat.ToString() : $"Чат {id}";

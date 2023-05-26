@@ -40,19 +40,18 @@ namespace TelegramCheker.Controllers;
         {
            checkController.recievedNewPersonalMessage(update.message.ToString(), users[update.message.Peer.ID].username, client);
         }
-        //  Console.WriteLine($"Получено сообщение: {update.message}\nВ группе с ID : {123}");
+
     }
 
+    // получить юзернейм из текста сообщения
     private string getUsernameFromMessage (string m)
     {
-        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ' };
+        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ', '*', '-', '+' };
         string result = "-1";
         //разбиваем сообщение на подстроки
         string[] strings = m.Split('\n');
 
         Console.WriteLine("***************************");
-       // foreach (string s in strings) { Console.WriteLine(s + "\n"); }
-       // Console.WriteLine("***************************");
 
         if (strings[0].Contains('@'))
         {
@@ -79,7 +78,7 @@ namespace TelegramCheker.Controllers;
 
 
         return result;
-    }
+    }//GetUsername
     
 }
 
