@@ -25,7 +25,7 @@ Data config = new Data();
 using var client = new WTelegram.Client(Config);
 //Запуск интерактивной настройки
 var myself = await client.LoginUserIfNeeded();
-Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
+Console.WriteLine($"Вошли в аккаунт {myself} (id {myself.id})");
 
  Dictionary<long, User> Users = new();
  Dictionary<long, ChatBase> Chats = new();
@@ -86,14 +86,14 @@ Console.ReadKey();
             case UpdateNewMessage unm: await DisplayMessage(unm.message); controller.newMessageRecieved(unm, Users, Chats); break;
             case UpdateEditMessage uem: await DisplayMessage(uem.message, true); break;
             // Note: UpdateNewChannelMessage and UpdateEditChannelMessage are also handled by above cases
-            case UpdateDeleteChannelMessages udcm: Console.WriteLine($"{udcm.messages.Length} message(s) deleted in {Chat(udcm.channel_id)}"); break;
+            case UpdateDeleteChannelMessages udcm: Console.WriteLine($"{udcm.messages.Length} сообщения были удалены из {Chat(udcm.channel_id)}"); break;
             case UpdateDeleteMessages udm: Console.WriteLine($"{udm.messages.Length} message(s) deleted"); break;
             case UpdateUserTyping uut: Console.WriteLine($"{User(uut.user_id)} is {uut.action}"); break;
             case UpdateChatUserTyping ucut: Console.WriteLine($"{Peer(ucut.from_id)} is {ucut.action} in {Chat(ucut.chat_id)}"); break;
             case UpdateChannelUserTyping ucut2: Console.WriteLine($"{Peer(ucut2.from_id)} is {ucut2.action} in {Chat(ucut2.channel_id)}"); break;
             case UpdateChatParticipants { participants: ChatParticipants cp }: Console.WriteLine($"{cp.participants.Length} participants in {Chat(cp.chat_id)}"); break;
-            case UpdateUserStatus uus: Console.WriteLine($"{User(uus.user_id)} is now {uus.status.GetType().Name[10..]}"); break;
-            case UpdateUserName uun: Console.WriteLine($"{User(uun.user_id)} has changed profile name: {uun.first_name} {uun.last_name}"); break;
+            case UpdateUserStatus uus: Console.WriteLine($"{User(uus.user_id)} сейчас {uus.status.GetType().Name[10..]}"); break;
+            case UpdateUserName uun: Console.WriteLine($"{User(uun.user_id)} поменял имя профиля: {uun.first_name} {uun.last_name}"); break;
             case UpdateUser uu: Console.WriteLine($"{User(uu.user_id)} has changed infos/photo"); break;
             default: Console.WriteLine(update.GetType().Name); break; // there are much more update types than the above example cases
         }
@@ -110,7 +110,7 @@ Console.ReadKey();
     return Task.CompletedTask;
 }
 
- string User(long id) => Users.TryGetValue(id, out var user) ? user.ToString() : $"User {id}";
- string Chat(long id) => Chats.TryGetValue(id, out var chat) ? chat.ToString() : $"Chat {id}";
+ string User(long id) => Users.TryGetValue(id, out var user) ? user.ToString() : $"Пользователь {id}";
+ string Chat(long id) => Chats.TryGetValue(id, out var chat) ? chat.ToString() : $"Чат {id}";
  string Peer(Peer peer) => peer is null ? null : peer is PeerUser user ? User(user.user_id)
     : peer is PeerChat or PeerChannel ? Chat(peer.ID) : $"Peer {peer.ID}";
