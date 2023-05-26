@@ -46,7 +46,7 @@ namespace TelegramCheker.Controllers;
     private string getUsernameFromMessage (string m)
     {
         char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ' };
-        string result = "";
+        string result = "-1";
         //разбиваем сообщение на подстроки
         string[] strings = m.Split('\n');
 

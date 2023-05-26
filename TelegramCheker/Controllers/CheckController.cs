@@ -19,26 +19,30 @@ namespace TelegramCheker.Controllers;
 
     public async void recievedNewMessageFromTChat(string message, string username, WTelegram.Client client)
     {
-      username = username.Trim('@');
-        int index = -1;
-
-        for (int i = 0; i < _data.Subjects.Count; i++)
+        if (username != "-1")
         {
-            if (_data.Subjects[i].UserName == username)
+            username = username.Trim('@');
+            int index = -1;
+
+            for (int i = 0; i < _data.Subjects.Count; i++)
             {
-                //если пользователь уже есть в базе
-                // TODO: произвести обработку (проверку)
-                index = i; break;
+                if (_data.Subjects[i].UserName == username)
+                {
+                    //если пользователь уже есть в базе
+                    // TODO: произвести обработку (проверку)
+                    index = i; break;
+                }
             }
-        }
 
-        if(index == -1)
-        {
-            Thread.Sleep(1000);
-            _data.Subjects.Add(new(username));
-            _data.SerializeSubjectsData();
-            sendFirstMessage(username, client);
-        }
+            if (index == -1)
+            {
+
+                // Thread.Sleep(1000);
+                _data.Subjects.Add(new(username));
+                _data.SerializeSubjectsData();
+                await sendFirstMessage(username, client);
+            }
+        }//if username != 0
 
     }
 
@@ -83,8 +87,9 @@ namespace TelegramCheker.Controllers;
     }//recieved personal m
 
     // отправка первого сообщеня
-    private async void sendFirstMessage(string username, WTelegram.Client client)
+    private async Task sendFirstMessage(string username, WTelegram.Client client)
      {
+        Thread.Sleep(10000);
         var resolved = await client.Contacts_ResolveUsername(username); // username without the @
         await client.SendMessageAsync(resolved, _data.ProgramConfig.FirstMessage);
         Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
