@@ -77,7 +77,8 @@ namespace TelegramCheker.Controllers;
                     break;
                 }
             }//foreach
-            if (!spamFlag) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; sendResultMessageToAdminChat(username, message, client); }
+            if (!spamFlag) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
+                sendResultMessageToAdminChat(username, message, client); }
         }
     }//recieved personal m
 
