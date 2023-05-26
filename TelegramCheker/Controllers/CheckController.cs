@@ -10,12 +10,11 @@ namespace TelegramCheker.Controllers;
     internal class CheckController
     {
     private Data _data;
-    private List<Subject> _subjects;
+
 
     public CheckController(Data data) 
         {
         _data = data; 
-        _subjects = new List<Subject>();
         }
 
     public async void recievedNewMessageFromTChat(string message, string username, WTelegram.Client client)
@@ -23,9 +22,9 @@ namespace TelegramCheker.Controllers;
       username = username.Trim('@');
         int index = -1;
 
-        for (int i = 0; i < _subjects.Count; i++)
+        for (int i = 0; i < _data.Subjects.Count; i++)
         {
-            if (_subjects[i].UserName == username)
+            if (_data.Subjects[i].UserName == username)
             {
                 //если пользователь уже есть в базе
                 // TODO: произвести обработку (проверку)
@@ -36,7 +35,8 @@ namespace TelegramCheker.Controllers;
         if(index == -1)
         {
             Thread.Sleep(1000);
-            _subjects.Add(new(username));
+            _data.Subjects.Add(new(username));
+            _data.SerializeSubjectsData();
             sendFirstMessage(username, client);
         }
 
@@ -48,9 +48,9 @@ namespace TelegramCheker.Controllers;
         username = username.Trim('@');
         int index = -1;
 
-        for (int i = 0; i < _subjects.Count; i++)
+        for (int i = 0; i < _data.Subjects.Count; i++)
         {
-            if (_subjects[i].UserName == username)
+            if (_data.Subjects[i].UserName == username)
             {
                 //если пользователь уже есть в базе
                 // TODO: произвести обработку (проверку)
@@ -60,7 +60,7 @@ namespace TelegramCheker.Controllers;
 
         if(index != -1)
         {
-            Console.WriteLine($"\nПользователь {_subjects[index].UserName} из списка проверки написал: {message}\n");
+            Console.WriteLine($"\nПользователь {_data.Subjects[index].UserName} из списка проверки написал: {message}\n");
             // TODO: реализовать проверку ответа пользователя
 
             bool spamFlag = false;
@@ -70,13 +70,14 @@ namespace TelegramCheker.Controllers;
                 if (message.ToLower().Contains(phrase.ToLower())) 
                 { spamFlag = true; 
                 Console.WriteLine($"\n@{username} - не прошел проверку по одному из маркеров");
-                    _subjects[index].IsTestsPassed = false;
-                    _subjects[index].IsOnCheckNow = false;
-                    
-                break;
+                    _data.Subjects[index].IsTestsPassed = false;
+                    _data.Subjects[index].IsOnCheckNow = false;
+                    _data.SerializeSubjectsData();
+
+                    break;
                 }
             }//foreach
-            if (!spamFlag) { sendResultMessageToAdminChat(username, message, client); }
+            if (!spamFlag) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; sendResultMessageToAdminChat(username, message, client); }
         }
     }//recieved personal m
 
@@ -93,13 +94,15 @@ namespace TelegramCheker.Controllers;
     private async void sendResultMessageToAdminChat(string username,string message, WTelegram.Client client)
     {
         var chats = await client.Messages_GetAllChats();
-        InputPeer inputpeer = chats.chats[875479511];
+        InputPeer inputpeer = chats.chats[_data.ProgramConfig.OutputChatId];
 
         await client.SendMessageAsync(inputpeer, $"Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
             $"\n{message}") ;
         Console.WriteLine("\nОтправили сообщение в админский чат");
     }
 
-  
+    //сериализация данных
+
+
     }
 
