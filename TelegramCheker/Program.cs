@@ -16,6 +16,7 @@ Data config = new Data();
         case "first_name": return "John";      // Если номер ещё не зарегистрирован
         case "last_name": return "Doe";        // Если номер ещё не зарегистрирован
         case "password": return "!";     // Пароль для 2fa
+        case "session_pathname": return @"./Data/TChecker.session";     // Папка для хранения сессии
         default: return null;                  // Конфиг по умолчанию
     }
 }
