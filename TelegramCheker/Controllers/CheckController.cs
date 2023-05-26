@@ -60,17 +60,25 @@ namespace TelegramCheker.Controllers;
 
         if(index != -1)
         {
-            Console.WriteLine($"\nПользователь {_subjects[index].UserName} из списка проверки написал!\n");
+            Console.WriteLine($"\nПользователь {_subjects[index].UserName} из списка проверки написал: {message}\n");
             // TODO: реализовать проверку ответа пользователя
 
             bool spamFlag = false;
 
             foreach (string phrase in _data.Indicators.Phrases)
             {
-                if (message.ToLower().Contains(phrase.ToLower())) { spamFlag = true; break;}
-            }
+                if (message.ToLower().Contains(phrase.ToLower())) 
+                { spamFlag = true; 
+                Console.WriteLine($"\n@{username} - не прошел проверку по одному из маркеров");
+                    _subjects[index].IsTestsPassed = false;
+                    _subjects[index].IsOnCheckNow = false;
+                    
+                break;
+                }
+            }//foreach
+            if (!spamFlag) { sendResultMessageToAdminChat(username, message, client); }
         }
-    }
+    }//recieved personal m
 
     // отправка первого сообщеня
     private async void sendFirstMessage(string username, WTelegram.Client client)
@@ -80,7 +88,17 @@ namespace TelegramCheker.Controllers;
         Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
      }
 
-    // проверка ответа пользователя
+    // отправить сообщение в админский чат с результатом
+
+    private async void sendResultMessageToAdminChat(string username,string message, WTelegram.Client client)
+    {
+        var chats = await client.Messages_GetAllChats();
+        InputPeer inputpeer = chats.chats[875479511];
+
+        await client.SendMessageAsync(inputpeer, $"Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
+            $"\n{message}") ;
+        Console.WriteLine("\nОтправили сообщение в админский чат");
+    }
 
   
     }
