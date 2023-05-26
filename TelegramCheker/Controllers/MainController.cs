@@ -22,7 +22,7 @@ namespace TelegramCheker.Controllers;
     }
 
     //новое сообщение в группе или канале
-    public void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
+    public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
         //если это чат или канал
         if (chats.ContainsKey(update.message.Peer.ID))
@@ -32,7 +32,7 @@ namespace TelegramCheker.Controllers;
             {
                 string username = getUsernameFromMessage( update.message.ToString());
 
-                checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
+               checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
                 Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
             }
         }
