@@ -4,13 +4,14 @@ using TelegramCheker.Models;
 using TL;
 using WTelegram;
 
-static string Config(string what)
+Data config = new Data();
+ string Config(string what)
 {
     switch (what)
     {
         case "api_id": return "22773979";
         case "api_hash": return "d3dcbbe6beaeb05dbbc4798db8e10d59";
-        case "phone_number": return "+79770174795";
+        case "phone_number": return config.ProgramConfig.LoginPhoneNumber;
         case "verification_code": Console.Write("Код подтверждения(отправлен в СМС или Push): "); return Console.ReadLine();
         case "first_name": return "John";      // Если номер ещё не зарегистрирован
         case "last_name": return "Doe";        // Если номер ещё не зарегистрирован
@@ -28,7 +29,7 @@ Console.WriteLine($"We are logged-in as {myself} (id {myself.id})");
  Dictionary<long, User> Users = new();
  Dictionary<long, ChatBase> Chats = new();
 
-Data config = new Data();
+
 MainController controller = new MainController(client, config);
 // подписываемся на событие
 client.OnUpdate += Client_OnUpdate;

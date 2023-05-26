@@ -29,7 +29,7 @@ namespace TelegramCheker.Models;
         if (Indicators == null)
         {
             Indicators = new SpamBotIndicators();
-            SerializeData(_indicatorsFileName);
+            SerializeIndicatorsData(_indicatorsFileName);
         }
 
         DeserializeSubjectsData(_subjectsFileName);
@@ -45,7 +45,7 @@ namespace TelegramCheker.Models;
     private void SerializeData(string fileName)
     {
         // Формирование строки JSON
-        string jsonData = JsonConvert.SerializeObject(Indicators, Newtonsoft.Json.Formatting.Indented);
+        string jsonData = JsonConvert.SerializeObject(ProgramConfig, Newtonsoft.Json.Formatting.Indented);
         // Запись объекта в JSON-файл
         if (!File.Exists(fileName)) { using (File.Create(fileName)) ; Thread.Sleep(1000); }
 
