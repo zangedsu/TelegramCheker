@@ -62,10 +62,13 @@ namespace TelegramCheker.Controllers;
         {
             Console.WriteLine($"\nПользователь {_subjects[index].UserName} из списка проверки написал!\n");
             // TODO: реализовать проверку ответа пользователя
-            if (message.ToLower().Contains("я робот"))
+
+            bool spamFlag = false;
+
+            foreach (string phrase in _data.Indicators.Phrases)
             {
-                Console.WriteLine($"\n\nПользователь не прошел проверку!!!\n");
-            };
+                if (message.ToLower().Contains(phrase.ToLower())) { spamFlag = true; break;}
+            }
         }
     }
 
