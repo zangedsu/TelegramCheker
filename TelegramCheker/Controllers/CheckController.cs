@@ -10,11 +10,13 @@ namespace TelegramCheker.Controllers;
     internal class CheckController
     {
     private Data _data;
+    private JLogger.Logger _logger;
 
 
-    public CheckController(Data data) 
+    public CheckController(Data data, JLogger.Logger logger) 
         {
         _data = data; 
+        _logger = logger;
         }
 
     public async void recievedNewMessageFromTChat(string message, string username, WTelegram.Client client)
@@ -43,6 +45,10 @@ namespace TelegramCheker.Controllers;
                 await sendFirstMessage(username, client);
             }
         }//if username != 0
+        else
+        {
+            _logger.AddNewErrorRecord($"Не удалось найти имя пользователя в сообщении");
+        }
 
     }
 
@@ -65,6 +71,7 @@ namespace TelegramCheker.Controllers;
         if(index != -1)
         {
             Console.WriteLine($"\nПользователь {_data.Subjects[index].UserName} из списка проверки написал: {message}\n");
+            _logger.AddNewRecord($"Пользователь {_data.Subjects[index].UserName} из списка проверки написал: {message}");
             // TODO: реализовать проверку ответа пользователя
 
             bool spamFlag = false;
@@ -93,6 +100,8 @@ namespace TelegramCheker.Controllers;
         var resolved = await client.Contacts_ResolveUsername(username); // username without the @
         await client.SendMessageAsync(resolved, _data.ProgramConfig.FirstMessage);
         Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
+        _logger.AddNewRecord($"Отправили первое сообщение в чат с @{username}");
+
      }
 
     // отправить сообщение в админский чат с результатом

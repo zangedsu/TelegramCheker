@@ -13,17 +13,20 @@ namespace TelegramCheker.Controllers;
     private WTelegram.Client client;
     private Data data;
     private CheckController checkController;
+    private JLogger.Logger _logger;
 
-    public MainController(WTelegram.Client Client, Data Data)
+    public MainController(WTelegram.Client Client, Data Data, JLogger.Logger logger)
     {
         client = Client;
         data = Data;
-        checkController = new(data);
+        checkController = new(data, logger);
+        _logger = logger;
     }
 
     //новое сообщение в группе или канале
     public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
+       Console.WriteLine(update.message.Peer.ID.ToString());
         //если это чат или канал
         if (chats.ContainsKey(update.message.Peer.ID))
         {
@@ -34,11 +37,13 @@ namespace TelegramCheker.Controllers;
 
                checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
                 Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
+                _logger.AddNewRecord($"Новое сообщение в целевом канале: {update.message} от {username}");
             }
         }
         else if(users.ContainsKey(update.message.Peer.ID))
         {
            checkController.recievedNewPersonalMessage(update.message.ToString(), users[update.message.Peer.ID].username, client);
+            _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {users[update.message.Peer.ID].username}");
         }
 
     }

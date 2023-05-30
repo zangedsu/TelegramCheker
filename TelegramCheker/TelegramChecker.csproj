@@ -16,4 +16,10 @@
     <Folder Include="Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="JLogger">
+      <HintPath>bin\Debug\net6.0\JLogger.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
