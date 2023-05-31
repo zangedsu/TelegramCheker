@@ -119,7 +119,7 @@ namespace TelegramCheker.Controllers;
         var chats = await client.Messages_GetAllChats();
         InputPeer inputpeer = chats.chats[_data.ProgramConfig.OutputChatId];
 
-        await client.SendMessageAsync(inputpeer, $"Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
+        await client.SendMessageAsync(inputpeer, $"✅Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
             $"\n{message}") ;
         Console.WriteLine("\nОтправили сообщение в админский чат");
     }

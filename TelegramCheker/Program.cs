@@ -6,7 +6,7 @@ using TL;
 using WTelegram;
 
 var loger = new JLogger.Logger();
-Console.WriteLine("\n\n#########\nTChecker v0.9.4\n##########\nПо все вопросам писать в тг @FDV_photo");
+Console.WriteLine("\n\n#########\nTChecker v0.9.7\n##########\nПо все вопросам писать в тг @FDV_photo");
 loger.AddNewRecord("Test");
 Thread.Sleep(5000);
 
