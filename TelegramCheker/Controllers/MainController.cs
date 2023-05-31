@@ -40,7 +40,7 @@ namespace TelegramCheker.Controllers;
                 _logger.AddNewRecord($"Новое сообщение в целевом канале: {update.message} от {username}");
             }
         }
-        else if(users.ContainsKey(update.message.Peer.ID))
+        else
         {
            checkController.recievedNewPersonalMessage(update.message.ToString(), users[update.message.Peer.ID].username, client);
             _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {users[update.message.Peer.ID].username}");

@@ -88,7 +88,7 @@ namespace TelegramCheker.Controllers;
                     break;
                 }
             }//foreach
-            if (!spamFlag) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
+            if (!spamFlag && _data.Subjects[index].IsOnCheckNow) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
                 sendResultMessageToAdminChat(username, message, client); }
         }
     }//recieved personal m
@@ -110,6 +110,7 @@ namespace TelegramCheker.Controllers;
     {
         var chats = await client.Messages_GetAllChats();
         InputPeer inputpeer = chats.chats[_data.ProgramConfig.OutputChatId];
+        
 
         await client.SendMessageAsync(inputpeer, $"Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
             $"\n{message}") ;
