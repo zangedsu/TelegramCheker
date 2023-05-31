@@ -74,22 +74,30 @@ namespace TelegramCheker.Controllers;
             _logger.AddNewRecord($"Пользователь {_data.Subjects[index].UserName} из списка проверки написал: {message}");
             // TODO: реализовать проверку ответа пользователя
 
-            bool spamFlag = false;
-
-            foreach (string phrase in _data.Indicators.Phrases)
+            if (_data.Subjects[index].IsOnCheckNow) 
             {
-                if (message.ToLower().Contains(phrase.ToLower())) 
-                { spamFlag = true; 
-                Console.WriteLine($"\n@{username} - не прошел проверку по одному из маркеров");
-                    _data.Subjects[index].IsTestsPassed = false;
-                    _data.Subjects[index].IsOnCheckNow = false;
-                    _data.SerializeSubjectsData();
+                bool spamFlag = false;
 
-                    break;
+                foreach (string phrase in _data.Indicators.Phrases)
+                {
+                    if (message.ToLower().Contains(phrase.ToLower()))
+                    {
+                        spamFlag = true;
+                        Console.WriteLine($"\n@{username} - не прошел проверку по одному из маркеров");
+                        _data.Subjects[index].IsTestsPassed = false;
+                        _data.Subjects[index].IsOnCheckNow = false;
+                        _data.SerializeSubjectsData();
+
+                        break;
+                    }
+                }//foreach
+                if (!spamFlag)
+                {
+                    _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
+                    sendResultMessageToAdminChat(username, message, client);
                 }
-            }//foreach
-            if (!spamFlag && _data.Subjects[index].IsOnCheckNow) { _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
-                sendResultMessageToAdminChat(username, message, client); }
+            }
+
         }
     }//recieved personal m
 
@@ -110,7 +118,6 @@ namespace TelegramCheker.Controllers;
     {
         var chats = await client.Messages_GetAllChats();
         InputPeer inputpeer = chats.chats[_data.ProgramConfig.OutputChatId];
-        
 
         await client.SendMessageAsync(inputpeer, $"Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
             $"\n{message}") ;
