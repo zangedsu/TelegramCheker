@@ -27,13 +27,14 @@ namespace TelegramCheker.Controllers;
     public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
        Console.WriteLine(update.message.Peer.ID.ToString());
+        string username = "";
         //если это чат или канал
         if (chats.ContainsKey(update.message.Peer.ID))
         {
             //если это канал - цель
             if(update.message.Peer.ID == data.ProgramConfig.TargetChatId)
             {
-                string username = getUsernameFromMessage( update.message.ToString());
+                username = getUsernameFromMessage( update.message.ToString());
 
                checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
                 Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
@@ -42,8 +43,8 @@ namespace TelegramCheker.Controllers;
         }
         else
         {
-           checkController.recievedNewPersonalMessage(update.message.ToString(), users[update.message.Peer.ID].username, client);
-            _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {users[update.message.Peer.ID].username}");
+           checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
+            _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
         }
 
     }
