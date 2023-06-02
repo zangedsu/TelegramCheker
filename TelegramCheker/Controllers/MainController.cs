@@ -43,8 +43,10 @@ namespace TelegramCheker.Controllers;
         }
         else
         {
-            username = users[update.message.From.ID].MainUsername;
-           checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
+            var dialogs = await client.Messages_GetAllDialogs();
+           
+            username = dialogs.users[update.message.From.ID].username;
+            checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
             _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
         }
     }
