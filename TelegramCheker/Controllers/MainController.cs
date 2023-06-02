@@ -46,7 +46,6 @@ namespace TelegramCheker.Controllers;
            checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
             _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
         }
-
     }
 
     // получить юзернейм из текста сообщения

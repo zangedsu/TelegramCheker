@@ -96,6 +96,11 @@ namespace TelegramCheker.Controllers;
                     _data.Subjects[index].IsTestsPassed = true; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
                     sendResultMessageToAdminChat(username, message, client);
                 }
+                else
+                {
+                    _data.Subjects[index].IsTestsPassed = false; _data.Subjects[index].IsOnCheckNow = false; _data.SerializeSubjectsData();
+                    _logger.AddNewRecord($"\nПользователь @{username} не прошел проверку");
+                }
             }
 
         }
