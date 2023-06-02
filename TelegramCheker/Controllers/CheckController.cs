@@ -60,11 +60,13 @@ namespace TelegramCheker.Controllers;
 
         for (int i = 0; i < _data.Subjects.Count; i++)
         {
-            if (_data.Subjects[i].UserName == username)
+            if (_data.Subjects[i].UserName.ToLower() == username.ToLower())
             {
                 //если пользователь уже есть в базе
                 // TODO: произвести обработку (проверку)
-                index = i; break;
+                index = i; 
+                Console.WriteLine($"Индекс юзера {username} : {i}");
+                break;
             }
         }//for
 
