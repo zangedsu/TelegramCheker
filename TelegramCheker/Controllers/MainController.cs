@@ -26,29 +26,37 @@ namespace TelegramCheker.Controllers;
     //новое сообщение в группе или канале
     public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
-       Console.WriteLine(update.message.Peer.ID.ToString());
-        string username = "";
-        //если это чат или канал
-        if (chats.ContainsKey(update.message.Peer.ID))
+        try
         {
-            //если это канал - цель
-            if(update.message.Peer.ID == data.ProgramConfig.TargetChatId)
+            Console.WriteLine(update.message.Peer.ID.ToString());
+            string username = "";
+            //если это чат или канал
+            if (chats.ContainsKey(update.message.Peer.ID))
             {
-                username = getUsernameFromMessage( update.message.ToString());
+                //если это канал - цель
+                if (update.message.Peer.ID == data.ProgramConfig.TargetChatId)
+                {
+                    username = getUsernameFromMessage(update.message.ToString());
 
-               checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
-                Console.WriteLine("\n\n\n"+ "\n\n" + username + "\n\n\n");
-                _logger.AddNewRecord($"Новое сообщение в целевом канале: {update.message} от {username}");
+                    checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
+                    Console.WriteLine("\n\n\n" + "\n\n" + username + "\n\n\n");
+                    _logger.AddNewRecord($"Новое сообщение в целевом канале: {update.message} от {username}");
+                }
+            }
+            else
+            {
+                var dialogs = await client.Messages_GetAllDialogs();
+
+                if (dialogs.users[update.message.From.ID].IsActive)
+                {
+                    username = dialogs.users[update.message.From.ID].username;
+                }
+                checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
+                _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
+
             }
         }
-        else
-        {
-            var dialogs = await client.Messages_GetAllDialogs();
-           
-            username = dialogs.users[update.message.From.ID].username;
-            checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
-            _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
-        }
+        catch (Exception e) { Console.WriteLine(e.Message); _logger.AddNewErrorRecord(e.Message); }
     }
 
     // получить юзернейм из текста сообщения

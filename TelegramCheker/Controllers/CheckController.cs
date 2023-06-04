@@ -111,24 +111,31 @@ namespace TelegramCheker.Controllers;
     // отправка первого сообщеня
     private async Task sendFirstMessage(string username, WTelegram.Client client)
      {
-        Thread.Sleep(10000);
-        var resolved = await client.Contacts_ResolveUsername(username); // username without the @
-        await client.SendMessageAsync(resolved, _data.ProgramConfig.FirstMessage);
-        Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
-        _logger.AddNewRecord($"Отправили первое сообщение в чат с @{username}");
-
-     }
+        try
+        {
+            Thread.Sleep(10000);
+            var resolved = await client.Contacts_ResolveUsername(username); // username without the @
+            await client.SendMessageAsync(resolved, _data.ProgramConfig.FirstMessage);
+            Console.WriteLine("Отправили первое сообщение в чат с " + "@" + username);
+            _logger.AddNewRecord($"Отправили первое сообщение в чат с @{username}");
+        }
+        catch (Exception e) { Console.WriteLine(e.Message); _logger.AddNewErrorRecord(e.Message); }
+    }
 
     // отправить сообщение в админский чат с результатом
 
     private async void sendResultMessageToAdminChat(string username,string message, WTelegram.Client client)
     {
-        var chats = await client.Messages_GetAllChats();
+        try
+        {
+            var chats = await client.Messages_GetAllChats();
         InputPeer inputpeer = chats.chats[_data.ProgramConfig.OutputChatId];
 
         await client.SendMessageAsync(inputpeer, $"✅Пользователь @{username} успешно прошел проверку.\nТекст ответа пользователя на моё сообщение:\n" +
             $"\n{message}") ;
         Console.WriteLine("\nОтправили сообщение в админский чат");
+        }
+        catch (Exception e) { Console.WriteLine(e.Message); _logger.AddNewErrorRecord(e.Message); }
     }
 
     //сериализация данных
