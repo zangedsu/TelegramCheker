@@ -7,8 +7,8 @@ using TelegramCheker.Models;
 using TL;
 
 namespace TelegramCheker.Controllers;
-    internal class MainController
-    {
+internal class MainController
+{
 
     private WTelegram.Client client;
     private Data data;
@@ -26,6 +26,7 @@ namespace TelegramCheker.Controllers;
     //новое сообщение в группе или канале
     public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
+        int tryCounter = 0;
         try
         {
             Console.WriteLine(update.message.Peer.ID.ToString());
@@ -46,21 +47,40 @@ namespace TelegramCheker.Controllers;
             else
             {
                 var dialogs = await client.Messages_GetAllDialogs();
-
-                if (dialogs.users[update.message.From.ID].IsActive)
+                long userId;
+                try
                 {
-                    username = dialogs.users[update.message.From.ID].username;
+                    userId = update.message.From.ID;
+                }
+                catch (Exception ex) { userId = userId = update.message.Peer.ID;}
+
+                if (dialogs.users[userId].IsActive)
+                {
+                    username = dialogs.users[userId].username;
                 }
                 checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
                 _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
 
             }
         }
-        catch (Exception e) { Console.WriteLine(e.Message); _logger.AddNewErrorRecord(e.Message); }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            _logger.AddNewErrorRecord(e.Message);
+            if (tryCounter >= 3)
+            {
+                tryCounter++;
+                Console.WriteLine($"Не удалось обработать сообщение, попытка {tryCounter} из 3");
+                _logger.AddNewErrorRecord($"Не удалось обработать сообщение, попытка {tryCounter} из 3");
+                Thread.Sleep(3000);
+                newMessageRecieved(update, users, chats);
+            }
+
+        }
     }
 
     // получить юзернейм из текста сообщения
-    private string getUsernameFromMessage (string m)
+    private string getUsernameFromMessage(string m)
     {
         char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ', '*', '-', '+' };
         string result = "-1";
@@ -79,10 +99,10 @@ namespace TelegramCheker.Controllers;
         }
         else
         {
-            for(int i = 2; i < strings.Length; i++)
+            for (int i = 2; i < strings.Length; i++)
             {
                 var tmp = strings[i].Split(specChars);
-                foreach(var c in tmp)
+                foreach (var c in tmp)
                 {
                     if (c.Contains('@'))
                     {
@@ -95,6 +115,7 @@ namespace TelegramCheker.Controllers;
 
         return result;
     }//GetUsername
+
     
 }
 
