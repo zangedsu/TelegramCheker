@@ -71,10 +71,8 @@ internal class MainController
                             Thread.Sleep(3000);
                             newMessageRecieved(update, users, chats);
                         }
-
                     }
                 }//if not null
-
             }
         }
         catch (Exception e)
@@ -83,7 +81,7 @@ internal class MainController
             _logger.AddNewErrorRecord(e.Message);
 
         }
-    }
+    }//recievedNewMessage
 
     // получить юзернейм из текста сообщения
     private string getUsernameFromMessage(string m)
