@@ -40,7 +40,6 @@ internal class MainController
                    // username = getUsernameFromMessage(update.message.ToString());
                    if(TryGetUsernameFromMessage(update.message.ToString(), out username))
                     {
-
                         checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
                         Console.WriteLine("\n\n\n" + "\n\n" + username + "\n\n\n");
                     }
@@ -126,7 +125,7 @@ internal class MainController
         return result;
     }//GetUsername
 
-    // получить юзернейм из текста сообщения
+    // попробовать получить юзернейм из текста сообщения
     private bool TryGetUsernameFromMessage(string m, out string result)
     {
         char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ', '*', '-', '+' };
@@ -159,7 +158,7 @@ internal class MainController
             }
         }
         return result != "-1" ? true : false ;
-    }//GetUsername
+    }//tryGetUsername
 
 
 }
