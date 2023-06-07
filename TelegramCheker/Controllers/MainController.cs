@@ -37,10 +37,18 @@ internal class MainController
                 //если это канал - цель
                 if (update.message.Peer.ID == data.ProgramConfig.TargetChatId)
                 {
-                    username = getUsernameFromMessage(update.message.ToString());
+                   // username = getUsernameFromMessage(update.message.ToString());
+                   if(TryGetUsernameFromMessage(update.message.ToString(), out username))
+                    {
 
-                    checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
-                    Console.WriteLine("\n\n\n" + "\n\n" + username + "\n\n\n");
+                        checkController.recievedNewMessageFromTChat(update.message.ToString(), username, client);
+                        Console.WriteLine("\n\n\n" + "\n\n" + username + "\n\n\n");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nНе удалось распознать юзернейм в сообщении\n");
+                        _logger.AddNewErrorRecord("Не удалось распознать юзернейм в сообщении");
+                    }
                     _logger.AddNewRecord($"Новое сообщение в целевом канале: {update.message} от {username}");
                 }
             }
@@ -115,11 +123,44 @@ internal class MainController
                 }
             }
         }
-
-
         return result;
     }//GetUsername
 
-    
+    // получить юзернейм из текста сообщения
+    private bool TryGetUsernameFromMessage(string m, out string result)
+    {
+        char[] specChars = { '.', ',', ':', ';', ')', '(', '<', '>', '{', '}', '[', ']', '\\', '/', '!', '#', '%', '^', '&', ' ', '*', '-', '+' };
+         result = "-1";
+        //разбиваем сообщение на подстроки
+        string[] strings = m.Split('\n');
+
+        Console.WriteLine("***************************");
+
+        if (strings[0].Contains('@'))
+        {
+            //ищем индексы в первой подстроке
+            var first = strings[0].IndexOf("(") + 1;
+            var second = strings[0].IndexOf(")");
+
+            result = m.Substring(first, second - first);
+        }
+        else
+        {
+            for (int i = 2; i < strings.Length; i++)
+            {
+                var tmp = strings[i].Split(specChars);
+                foreach (var c in tmp)
+                {
+                    if (c.Contains('@'))
+                    {
+                        result = c;
+                    }
+                }
+            }
+        }
+        return result != "-1" ? true : false ;
+    }//GetUsername
+
+
 }
 
