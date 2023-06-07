@@ -14,6 +14,7 @@ internal class MainController
     private Data data;
     private CheckController checkController;
     private JLogger.Logger _logger;
+    private int _attemptsCounter = 0;
 
     public MainController(WTelegram.Client Client, Data Data, JLogger.Logger logger)
     {
@@ -22,11 +23,10 @@ internal class MainController
         checkController = new(data, logger);
         _logger = logger;
     }
-
+    // TODO: Исправить костыльную систему с попытками при неактуальном словаре
     //новое сообщение в группе или канале
     public async void newMessageRecieved(UpdateNewMessage update, Dictionary<long, User> users, Dictionary<long, ChatBase> chats)
     {
-        int tryCounter = 0;
         try
         {
             Console.WriteLine(update.message.Peer.ID.ToString());
@@ -47,19 +47,33 @@ internal class MainController
             else
             {
                 var dialogs = await client.Messages_GetAllDialogs();
-                long userId;
-                try
-                {
-                    userId = update.message.From.ID;
-                }
-                catch (Exception ex) { userId = userId = update.message.Peer.ID;}
+                long? userId;
+                userId = update.message.From?.ID != null ? update.message.From?.ID : update.message.Peer.ID;
 
-                if (dialogs.users[userId].IsActive)
+                if(userId != null)
                 {
-                    username = dialogs.users[userId].username;
-                }
-                checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
-                _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
+                    if (dialogs.users.ContainsKey((long)userId))
+                    {
+                        if (dialogs.users[(long)userId].IsActive)
+                        {
+                            username = dialogs.users[(long)userId].username;
+                        }
+                        checkController.recievedNewPersonalMessage(update.message.ToString(), username, client);
+                        _logger.AddNewRecord($"Новое личное сообщение: {update.message} от {username}");
+                    }//if contains
+                    else
+                    {
+                        if(_attemptsCounter >= 3)
+                        {
+                            _attemptsCounter++;
+                            Console.WriteLine($"Не удалось обработать сообщение, попытка {_attemptsCounter} из 3");
+                            _logger.AddNewErrorRecord($"Не удалось обработать сообщение, попытка {_attemptsCounter} из 3");
+                            Thread.Sleep(3000);
+                            newMessageRecieved(update, users, chats);
+                        }
+
+                    }
+                }//if not null
 
             }
         }
@@ -67,14 +81,6 @@ internal class MainController
         {
             Console.WriteLine(e.Message);
             _logger.AddNewErrorRecord(e.Message);
-            if (tryCounter >= 3)
-            {
-                tryCounter++;
-                Console.WriteLine($"Не удалось обработать сообщение, попытка {tryCounter} из 3");
-                _logger.AddNewErrorRecord($"Не удалось обработать сообщение, попытка {tryCounter} из 3");
-                Thread.Sleep(3000);
-                newMessageRecieved(update, users, chats);
-            }
 
         }
     }
