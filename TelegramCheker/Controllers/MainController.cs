@@ -55,7 +55,8 @@ internal class MainController
             {
                 var dialogs = await client.Messages_GetAllDialogs();
                 long? userId;
-                userId = update.message.From?.ID != null ? update.message.From?.ID : update.message.Peer.ID;
+
+                userId = update.message.From?.ID != null ? update.message.From?.ID : update.message.Peer?.ID;
 
                 if(userId != null)
                 {
