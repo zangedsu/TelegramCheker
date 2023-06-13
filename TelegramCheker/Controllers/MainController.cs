@@ -158,6 +158,8 @@ internal class MainController
                 }
             }
         }
+        //временно
+        if (result.Contains("bot")) result = "-1";
         return result != "-1" ? true : false ;
     }//tryGetUsername
 

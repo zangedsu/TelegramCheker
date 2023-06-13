@@ -49,7 +49,6 @@ namespace TelegramCheker.Controllers;
         {
             _logger.AddNewErrorRecord($"Не удалось найти имя пользователя в сообщении");
         }
-
     }
 
     //получено личное сообщение
